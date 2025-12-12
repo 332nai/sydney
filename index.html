@@ -4,15 +4,19 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>悉尼内西区美食全景 | Inner West Dining Guide</title>
+    <meta name="description" content="悉尼内西区美食指南：实时更新的餐厅评测与推荐。">
     
     <script src="https://cdn.tailwindcss.com"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
     
     <style>
         body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; }
+        /* 隐藏滚动条但保留滚动功能 */
         .hide-scroll::-webkit-scrollbar { display: none; }
         .hide-scroll { -ms-overflow-style: none; scrollbar-width: none; }
+        /* 防止 Alpine 加载前闪烁 */
         [x-cloak] { display: none !important; }
+        /* 玻璃拟态效果 */
         .glass-effect { background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px); }
     </style>
 </head>
@@ -142,12 +146,12 @@
         <div class="flex justify-between items-end mb-6 px-1 border-b border-gray-100 pb-2">
             <span class="text-sm text-gray-500">
                 共 <strong x-text="filteredRestaurants.length" class="text-gray-900"></strong> 家餐厅 
-                <span x-show="restaurants.length === 0" class="text-orange-500 ml-2 animate-pulse">(数据加载中...)</span>
+                <span x-show="restaurants.length === 0" class="text-orange-500 ml-2 animate-pulse">(加载中...)</span>
             </span>
         </div>
 
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-            <template x-for="r in filteredRestaurants" :key="r.name">
+            <template x-for="r in filteredRestaurants" :key="r.id">
                 <div class="group bg-white rounded-xl shadow-sm hover:shadow-lg transition-all duration-300 border border-gray-100 overflow-hidden flex flex-col h-full relative">
                     <div class="absolute top-0 left-0 w-1 h-full transition-colors duration-300" :class="getSuburbColor(r.suburb)"></div>
                     
@@ -167,6 +171,7 @@
                         <a :href="'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(r.name + ' ' + r.suburb + ' Sydney')" 
                            target="_blank" class="group-hover:text-orange-600 transition-colors duration-200 flex items-center gap-2 mb-2">
                             <h3 class="text-lg font-bold text-gray-900 leading-tight" x-text="r.name"></h3>
+                            <svg class="w-4 h-4 text-gray-300 group-hover:text-orange-500 opacity-0 group-hover:opacity-100 transition-opacity" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg>
                         </a>
                         
                         <p class="text-gray-600 text-sm mb-4 leading-relaxed line-clamp-3" x-text="r.desc"></p>
@@ -189,7 +194,7 @@
     </main>
 
     <footer class="mt-12 py-8 text-center text-xs text-gray-400 border-t border-gray-100">
-        <p>Data Source: Google Sheets • Powered by Opensheet & Alpine.js</p>
+        <p>Data Source: Google Sheets • Powered by Alpine.js</p>
     </footer>
 
     <script>
@@ -203,11 +208,11 @@
                 showRandomizer: false, 
                 randomResult: null,
 
-                // --- 静态选项 ---
-                suburbs: ['All', 'Burwood', 'Cabarita', 'Concord', 'Concord West', 'Mortlake', 'North Strathfield'],
-                categories: ['All', 'Chinese', 'Italian', 'Japanese', 'Korean', 'Thai', 'Vietnamese', 'Middle Eastern', 'Indian', 'Cafe', 'Western'],
+                // 筛选器数据源 (动态生成)
+                suburbs: ['All'],
+                categories: ['All'],
 
-                // --- 动态数据 ---
+                // 餐厅主数据
                 restaurants: [], 
 
                 // --- 初始化: 加载 Google Sheet ---
@@ -221,18 +226,30 @@
                         
                         const rawData = await response.json();
                         
-                        // 数据清洗
-                        this.restaurants = rawData.map(row => ({
+                        // 1. 数据清洗与 ID 生成
+                        this.restaurants = rawData.map((row, index) => ({
+                            // 优先使用 ID 列，如果没有则用临时索引，防止白屏
+                            id: row.id || ('temp_' + index),
+                            
                             name: row.name || '未知餐厅',
-                            suburb: row.suburb || 'Other',
-                            category: row.category || 'Other',
-                            priceLevel: parseInt(row.priceLevel) || 1, // 确保数字
+                            suburb: row.suburb ? row.suburb.trim() : 'Other', // 去除空格
+                            category: row.category ? row.category.trim() : 'Other',
+                            priceLevel: parseInt(row.priceLevel) || 1, 
                             desc: row.desc || '暂无描述',
-                            // 处理中文或英文逗号分隔的菜品
+                            // 兼容中英文逗号
                             dishes: row.dishes ? row.dishes.split(/,|，/).map(d => d.trim()) : []
                         }));
 
-                        console.log(`成功加载 ${this.restaurants.length} 条数据`);
+                        // 2. 自动生成筛选器 (去重 + 排序)
+                        const allSuburbs = this.restaurants.map(r => r.suburb);
+                        const uniqueSuburbs = [...new Set(allSuburbs)].sort();
+                        this.suburbs = ['All', ...uniqueSuburbs];
+
+                        const allCategories = this.restaurants.map(r => r.category);
+                        const uniqueCategories = [...new Set(allCategories)].sort();
+                        this.categories = ['All', ...uniqueCategories];
+
+                        console.log(`已加载 ${this.restaurants.length} 家餐厅`);
 
                     } catch (error) {
                         console.error("加载错误:", error);
@@ -240,7 +257,7 @@
                     }
                 },
                 
-                // --- 筛选逻辑 ---
+                // --- 筛选计算逻辑 ---
                 get filteredRestaurants() {
                     return this.restaurants.filter(r => {
                         const matchesSuburb = this.activeSuburb === 'All' || r.suburb === this.activeSuburb;
@@ -256,7 +273,7 @@
                     });
                 },
                 
-                // --- 随机选择逻辑 ---
+                // --- 随机逻辑 ---
                 pickRandom(targetPrice) {
                     if (this.restaurants.length === 0) {
                         alert("数据加载中，请稍候...");
@@ -277,15 +294,20 @@
                     }
                 },
 
-                // --- UI 辅助 ---
+                // --- 视觉辅助函数 ---
                 getSuburbColor(suburb) {
+                    // 这里可以预设颜色，未知区域会显示默认灰色
                     const colors = {
                         'Burwood': 'bg-purple-500',
                         'Cabarita': 'bg-blue-400',
                         'Concord': 'bg-green-500',
                         'Concord West': 'bg-amber-400',
                         'Mortlake': 'bg-indigo-400',
-                        'North Strathfield': 'bg-rose-500'
+                        'North Strathfield': 'bg-rose-500',
+                        'Rhodes': 'bg-sky-500',
+                        'Strathfield': 'bg-yellow-500',
+                        'Ashfield': 'bg-zinc-600',
+                        'Five Dock': 'bg-red-400'
                     };
                     return colors[suburb] || 'bg-gray-400';
                 },

@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>悉尼内西区美食全景 | Inner West Dining Guide</title>
-    <meta name="description" content="悉尼内西区美食指南：含价位筛选与随机推荐功能。">
+    <meta name="description" content="悉尼内西区美食指南：含 Burwood, Rhodes, Concord 等地餐厅评测与推荐。">
     
     <script src="https://cdn.tailwindcss.com"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
@@ -24,7 +24,7 @@
             <div class="flex flex-col md:flex-row justify-between items-center gap-4 mb-4">
                 <div class="text-center md:text-left">
                     <h1 class="text-2xl font-bold text-gray-900 tracking-tight">悉尼内西吃什么</h1>
-                    <p class="text-xs text-gray-500 font-medium tracking-wide uppercase mt-1">小红书 @ian233 </p>
+                    <p class="text-xs text-gray-500 font-medium tracking-wide uppercase mt-1">关注小红书@ian233，了解更多信息</p>
                 </div>
                 
                 <div class="flex gap-3 w-full md:w-auto">
@@ -201,15 +201,51 @@
                 search: '',
                 activeSuburb: 'All',
                 activeCategory: 'All',
-                activePrice: 'All', // New State
-                showRandomizer: false, // Modal State
-                randomResult: null,    // Random Pick Result
+                activePrice: 'All', 
+                showRandomizer: false, 
+                randomResult: null,
 
-                suburbs: ['All', 'Cabarita', 'Concord', 'Concord West', 'Mortlake', 'North Strathfield'],
-                categories: ['All', 'Italian', 'Japanese', 'Korean', 'Thai', 'Chinese', 'Vietnamese', 'Middle Eastern', 'Indian', 'Cafe', 'Western'],
+                suburbs: ['All', 'Burwood', 'Cabarita', 'Concord', 'Concord West', 'Mortlake', 'North Strathfield'],
+                categories: ['All', 'Chinese', 'Italian', 'Japanese', 'Korean', 'Thai', 'Vietnamese', 'Middle Eastern', 'Indian', 'Cafe', 'Western'],
 
-                // 核心数据：已添加 priceLevel (1: <$20, 2: $20-40, 3: >$40)
+                // 数据源
                 restaurants: [
+                    // --- Burwood (NEW ADDITIONS) ---
+                    { name: "Taste of Shanghai (上海天同)", suburb: "Burwood", category: "Chinese", priceLevel: 2, desc: "区内老牌名店，装修复刻上海弄堂，主打传统本帮菜和慢炖系列。", dishes: ["生煎包", "红烧肉", "咸蛋黄大虾"] },
+                    { name: "New Shanghai (新上海)", suburb: "Burwood", category: "Chinese", priceLevel: 2, desc: "位于商场内，拥有开放式点心厨房，适合家庭快捷用餐。", dishes: ["蟹粉小笼包", "粗炒面", "粢饭糕"] },
+                    { name: "Lilong by Taste of Shanghai", suburb: "Burwood", category: "Chinese", priceLevel: 1, desc: "上海天同旗下副牌，更年轻化，专注面食和小吃。", dishes: ["弄堂炸猪排", "葱油拌面"] },
+                    { name: "Xi'an Eatery (西安诱惑)", suburb: "Burwood", category: "Chinese", priceLevel: 1, desc: "味道粗犷正宗，以手工宽面和肉夹馍闻名，性价比高。", dishes: ["油泼Biang Biang面", "腊汁肉夹馍", "秦镇米皮"] },
+                    { name: "1919 Lanzhou Beef Noodle", suburb: "Burwood", category: "Chinese", priceLevel: 1, desc: "主打现拉牛肉面，汤底清亮，面条劲道。", dishes: ["传统牛肉面", "酸菜牛肉面"] },
+                    { name: "1915 Lanzhou Beef Noodles", suburb: "Burwood", category: "Chinese", priceLevel: 1, desc: "火车站附近的人气面馆，饭点常排队，口味浓郁。", dishes: ["招牌牛肉拉面", "凉拌牛肉"] },
+                    { name: "Xi Bay (西贝手工面)", suburb: "Burwood", category: "Chinese", priceLevel: 2, desc: "提供各式手工拉面和西北风味炒菜，分量足。", dishes: ["凉面烤肉", "羊肉炒丁面", "葱爆羊肉"] },
+                    { name: "My Aunt's Handmade Noodles (胖姨儿)", suburb: "Burwood", category: "Chinese", priceLevel: 1, desc: "免费续面服务和地道的东北口味，非常受欢迎。", dishes: ["酱骨架", "四合一拌面", "手工拉面"] },
+                    { name: "Apandim Uyghur Restaurant", suburb: "Burwood", category: "Chinese", priceLevel: 2, desc: "悉尼著名的维吾尔餐厅(Halal)，以大盘鸡和炭烤串著称。", dishes: ["大盘鸡(皮带面)", "炭烤羊肉串", "烤包子"] },
+                    { name: "Royal Treasure Seafood (敦煌)", suburb: "Burwood", category: "Chinese", priceLevel: 3, desc: "内西区最高端的粤菜酒楼之一，保留手推车早茶传统。", dishes: ["避风塘羊架", "游水海鲜", "午市点心"] },
+                    { name: "Canton Soul (粤)", suburb: "Burwood", category: "Chinese", priceLevel: 3, desc: "环境现代私密，菜品精致，注重食材原味。", dishes: ["龙虾伊面", "明炉烧鸭", "老火炖汤"] },
+                    { name: "Kowloon Cafe (九龙冰室)", suburb: "Burwood", category: "Chinese", priceLevel: 2, desc: "完美复刻香港旺角街头风，怀旧霓虹灯装饰，适合下午茶。", dishes: ["冰火菠萝油", "滑蛋虾仁饭", "焗猪扒饭"] },
+                    { name: "Dim Sum House (包点先生)", suburb: "Burwood", category: "Chinese", priceLevel: 1, desc: "专注于各类手工包点和广式蒸点，现做现卖。", dishes: ["烧卖", "虾饺", "自制肠粉"] },
+                    { name: "1912 Dumpling Bar (小笼馆)", suburb: "Burwood", category: "Chinese", priceLevel: 2, desc: "主打南京/上海风味，以汤包和鸭血粉丝汤为特色。", dishes: ["蟹粉小笼包", "生煎包", "南京盐水鸭"] },
+                    { name: "Silver Territory (京唐海鲜酒家)", suburb: "Burwood", category: "Chinese", priceLevel: 3, desc: "提供早茶和晚市海鲜的老牌餐厅，口味地道。", dishes: ["皇帝蟹三吃", "早茶点心"] },
+                    { name: "Mr Stonebowl (石锅先生)", suburb: "Burwood", category: "Chinese", priceLevel: 2, desc: "悉尼排队王，将中餐与现代烹饪结合，菜品极具视觉冲击力。", dishes: ["墨鱼汁蒜香虾饭", "面包糠炸茄子", "石锅系列"] },
+                    { name: "Spicy Joint (辛香汇)", suburb: "Burwood", category: "Chinese", priceLevel: 2, desc: "知名连锁品牌，环境时尚，菜品标准化，性价比不错。", dishes: ["钵钵鸡", "水煮鱼", "锦里奶酪"] },
+                    { name: "Great Dragon Hot Pot (大龙火锅)", suburb: "Burwood", category: "Chinese", priceLevel: 3, desc: "正宗牛油锅底，口味重辣重麻，食材新鲜。", dishes: ["极品毛肚", "黄喉", "麻辣牛肉"] },
+                    { name: "Legend HotPot (香天下)", suburb: "Burwood", category: "Chinese", priceLevel: 3, desc: "提供无限量自助火锅，适合大胃王和团体聚餐。", dishes: ["自助肉类", "海鲜", "芭比肥牛"] },
+                    { name: "Tasty Eating House (好味小厨)", suburb: "Burwood", category: "Chinese", priceLevel: 1, desc: "菜品种类丰富，从炒菜到砂锅，口味偏家常。", dishes: ["外婆豆腐", "什锦炒面", "水煮牛肉"] },
+                    { name: "Guo Kui Master (阿甘锅盔)", suburb: "Burwood", category: "Chinese", priceLevel: 1, desc: "位于Chinatown内，现烤的湖北荆州锅盔，香脆可口。", dishes: ["梅干菜锅盔", "牛肉锅盔"] },
+                    { name: "Lovin' Lamb (爱羊羊)", suburb: "Burwood", category: "Chinese", priceLevel: 1, desc: "专注于炭烤羊肉串，孜然味浓郁，边走边吃的首选。", dishes: ["炭烤羊肉串"] },
+                    { name: "Inoichi Ramen (猪一)", suburb: "Burwood", category: "Japanese", priceLevel: 2, desc: "米其林必比登推荐风格，汤底鲜美，常有限定款。", dishes: ["黑松露拉面", "豚骨拉面", "和牛饭"] },
+                    { name: "Rengaya Casual Dining", suburb: "Burwood", category: "Japanese", priceLevel: 3, desc: "北悉尼烧肉名店的副牌，肉质上乘，环境较好。", dishes: ["和牛拼盘", "牛舌"] },
+                    { name: "The August Banh Mi Plus", suburb: "Burwood", category: "Vietnamese", priceLevel: 1, desc: "以脆皮烧肉法棍在本地极受推崇，物美价廉。", dishes: ["脆皮烧肉包", "越南牛肉粉"] },
+                    { name: "Tasty of Penang", suburb: "Burwood", category: "Chinese", priceLevel: 1, desc: "位于Chinatown二楼，镬气十足的槟城街头味。", dishes: ["炒贵刁", "福建虾面"] },
+                    { name: "Soi 25", suburb: "Burwood", category: "Thai", priceLevel: 2, desc: "环境优雅的泰式餐厅，摆盘精致，口味正宗。", dishes: ["Pad Thai", "冬阴功汤", "烤猪颈肉"] },
+                    { name: "The Taste of Village (Burwood)", suburb: "Burwood", category: "Indian", priceLevel: 2, desc: "提供传统北印度咖喱和泥炉炭烤美食。", dishes: ["奶油鸡", "烤羊排"] },
+                    { name: "Onyx Grill", suburb: "Burwood", category: "Western", priceLevel: 3, desc: "位于皇冠假日酒店内，主打干式熟成牛排和炭烤海鲜。", dishes: ["干式熟成牛排", "炭烤海鲜拼盘"] },
+                    { name: "Two Deers Cafe", suburb: "Burwood", category: "Cafe", priceLevel: 2, desc: "网红风咖啡厅，以精致的下午茶套餐和环境闻名。", dishes: ["英式下午茶", "软壳蟹可颂"] },
+                    { name: "Artisaint Patisserie", suburb: "Burwood", category: "Cafe", priceLevel: 2, desc: "提供高水准的法式蛋糕、可颂和咖啡。", dishes: ["闪电泡芙", "水果塔", "法式可颂"] },
+                    { name: "The Burwood Hotel", suburb: "Burwood", category: "Western", priceLevel: 2, desc: "适合年轻人的夜生活场所，提供创意中式汉堡和小吃。", dishes: ["创意刈包", "珍珠奶茶鸡尾酒"] },
+                    { name: "Sahara By The Park", suburb: "Burwood", category: "Middle Eastern", priceLevel: 2, desc: "面对公园，位置极佳，提供丰盛的中东烤肉。", dishes: ["土耳其披萨", "混合烤肉拼盘"] },
+                    { name: "SparQling Pizza and Grill", suburb: "Burwood", category: "Italian", priceLevel: 2, desc: "传统的意式餐厅，披萨和意面是主打。", dishes: ["木火披萨", "海鲜意面"] },
+
                     // --- Cabarita ---
                     { name: "Angelo’s Cabarita", suburb: "Cabarita", category: "Italian", priceLevel: 3, desc: "该区的皇冠明珠，拥有永恒的优雅与绝佳海湾景观。平衡传统意大利工艺与现代澳洲农产品。", dishes: ["和牛土豆面疙瘩", "海鲜拼盘", "桌边提拉米苏"] },
                     { name: "Vela Dining & Bar", suburb: "Cabarita", category: "Western", priceLevel: 3, desc: "坐落于游艇码头，提供精致地中海餐饮和休闲日落酒吧双重体验。", dishes: ["双人海鲜拼盘", "慢炖羊肩肉", "焗扇贝"] },
@@ -308,6 +344,7 @@
                 
                 getSuburbColor(suburb) {
                     const colors = {
+                        'Burwood': 'bg-purple-500',
                         'Cabarita': 'bg-blue-400',
                         'Concord': 'bg-green-500',
                         'Concord West': 'bg-amber-400',
@@ -325,13 +362,11 @@
                 },
 
                 pickRandom(priceLevel) {
-                    // 1. 先筛选出符合价位的餐厅
                     let pool = this.restaurants;
                     if (priceLevel !== 'All') {
                         pool = pool.filter(r => r.priceLevel === priceLevel);
                     }
                     
-                    // 2. 随机抽取
                     if (pool.length > 0) {
                         const randomIndex = Math.floor(Math.random() * pool.length);
                         this.randomResult = pool[randomIndex];

@@ -39,10 +39,15 @@
                 
                 <div class="flex gap-3 w-full md:w-auto">
                     <div class="relative flex-grow md:flex-grow-0 md:w-64 group">
-                        <input x-model="search" @input="currentPage = 1" type="text" placeholder="🔍 搜店名、区域、介绍..." 
+                        <input x-model="search" @input="isShuffleMode = false; currentPage = 1" type="text" placeholder="🔍 搜店名、区域、介绍..." 
                             class="w-full pl-9 pr-4 py-2 rounded-xl border border-gray-200 bg-gray-50 focus:bg-white focus:ring-2 focus:ring-orange-500 outline-none text-sm transition-all">
                     </div>
                     
+                    <button @click="shuffleView()" 
+                        class="bg-white hover:bg-teal-50 text-gray-700 border border-gray-200 hover:border-teal-200 px-4 py-2 rounded-xl text-sm font-medium shadow-sm transition-all duration-300 flex items-center gap-2 whitespace-nowrap transform hover:-translate-y-0.5">
+                        <span>🔀</span> <span class="hidden sm:inline">随便看</span>
+                    </button>
+
                     <button @click="pickRandom()" 
                         class="bg-gray-900 hover:bg-orange-600 text-white px-4 py-2 rounded-xl text-sm font-medium shadow-lg hover:shadow-orange-500/30 transition-all duration-300 flex items-center gap-2 whitespace-nowrap transform hover:-translate-y-0.5">
                         <span>🎲</span> <span class="hidden sm:inline">帮我选</span><span class="sm:hidden">随机</span>
@@ -266,6 +271,10 @@
                 reportText: '报错',
                 isRandomPick: false, 
 
+                // ✨ 改动：新增洗牌模式状态
+                isShuffleMode: false,
+                shuffledList: [],
+
                 showFilters: true,
 
                 activeSuburbs: [],
@@ -319,12 +328,12 @@
                     }
                 },
 
-                // ✨ 更新：直接复制内容，不再使用 navigator.share
+                // ✨ 改动：直接复制到剪贴板
                 shareRestaurant(r) {
                     if (!r) return;
-                    const text = `要不要吃${r.name}，在${r.suburb}`;
-                    const url = `https://www.google.com/maps/search/?api=1&query=` + encodeURIComponent(r.name + ' ' + r.suburb);
-                    const fullText = `${text}\n 位置是 ${url}`;
+                    const text = `发现一家好吃的！\n🏠 ${r.name}\n📍 ${r.suburb}\n⭐ 推荐指数: ${r.recommendationLevel}星\n💬 ${r.desc}`;
+                    const url = `https://www.google.com/maps/search/?api=1&query=` + encodeURIComponent(r.name + ' ' + r.suburb + ' Sydney');
+                    const fullText = `${text}\n🔗 导航: ${url}`;
                     
                     navigator.clipboard.writeText(fullText).then(() => {
                         alert('餐厅信息已复制到剪贴板！');
@@ -369,6 +378,20 @@
                     this.showRandomizer = true;
                 },
 
+                // ✨ 新增：洗牌视图功能
+                shuffleView() {
+                    let list = [...this.filteredRestaurants];
+                    // Fisher-Yates 洗牌算法
+                    for (let i = list.length - 1; i > 0; i--) {
+                        const j = Math.floor(Math.random() * (i + 1));
+                        [list[i], list[j]] = [list[j], list[i]];
+                    }
+                    this.shuffledList = list;
+                    this.isShuffleMode = true;
+                    this.currentPage = 1;
+                    window.scrollTo({top: 0, behavior: 'smooth'});
+                },
+
                 async reportError(id) {
                     if (!id || this.isReporting) return;
                     if (!confirm("确定要为这家餐厅报错吗？\n(例如：信息不准或已关门)")) return;
@@ -405,6 +428,7 @@
                     } else {
                         this[targetArray].push(value);
                     }
+                    this.isShuffleMode = false; // ✨ 改动：筛选时退出洗牌模式
                     this.currentPage = 1; 
                     window.scrollTo({top: 0, behavior: 'smooth'});
                 },
@@ -413,6 +437,7 @@
                     if (type === 'categories') this.activeCategories = [];
                     if (type === 'prices') this.activePrices = [];
                     if (type === 'stars') this.activeStars = [];
+                    this.isShuffleMode = false; // ✨ 改动：筛选时退出洗牌模式
                     this.currentPage = 1; 
                     window.scrollTo({top: 0, behavior: 'smooth'});
                 },
@@ -420,11 +445,14 @@
                 get paginatedRestaurants() {
                     const start = (this.currentPage - 1) * this.itemsPerPage;
                     const end = start + this.itemsPerPage;
-                    return this.filteredRestaurants.slice(start, end);
+                    // ✨ 改动：如果处于洗牌模式，显示已洗牌的列表
+                    const source = this.isShuffleMode ? this.shuffledList : this.filteredRestaurants;
+                    return source.slice(start, end);
                 },
 
                 get totalPages() {
-                    return Math.ceil(this.filteredRestaurants.length / this.itemsPerPage);
+                    const source = this.isShuffleMode ? this.shuffledList : this.filteredRestaurants;
+                    return Math.ceil(source.length / this.itemsPerPage);
                 },
 
                 changePage(page) {

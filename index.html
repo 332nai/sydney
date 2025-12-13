@@ -28,17 +28,17 @@
                     
                     <div class="flex items-center justify-center md:justify-start gap-3 mt-3">
                         <button @click="shareApp()" class="text-[11px] font-medium text-gray-500 hover:text-orange-600 flex items-center gap-1 transition-colors bg-white border border-gray-200 px-2 py-1 rounded-lg shadow-sm">
-                            📤 分享给朋友
+                            📤 分享
                         </button>
                         <a href="mailto:your_email@example.com?subject=悉尼吃饭指南反馈" class="text-[11px] font-medium text-gray-500 hover:text-orange-600 flex items-center gap-1 transition-colors bg-white border border-gray-200 px-2 py-1 rounded-lg shadow-sm">
-                            💬 反馈给作者
+                            💬 反馈
                         </a>
                     </div>
                 </div>
                 
                 <div class="flex gap-3 w-full md:w-auto">
                     <div class="relative flex-grow md:flex-grow-0 md:w-64 group">
-                        <input x-model="search" @input="currentPage = 1" type="text" placeholder="🔍 搜店名、菜系..." 
+                        <input x-model="search" @input="currentPage = 1" type="text" placeholder="🔍 搜店名、区域、介绍..." 
                             class="w-full pl-9 pr-4 py-2 rounded-xl border border-gray-200 bg-gray-50 focus:bg-white focus:ring-2 focus:ring-orange-500 outline-none text-sm transition-all">
                     </div>
                     
@@ -263,7 +263,7 @@
                 randomResult: null,
                 isReporting: false,
                 reportText: '报错',
-                isRandomPick: false, // ✨ 新增：用于区分是随机选的还是点开的
+                isRandomPick: false, 
 
                 showFilters: true,
 
@@ -318,11 +318,10 @@
                     }
                 },
 
-                // ✨ 新增：用于分享单个餐厅
                 shareRestaurant(r) {
                     if (!r) return;
                     const text = `发现一家好吃的！\n🏠 ${r.name}\n📍 ${r.suburb}\n⭐ 推荐指数: ${r.recommendationLevel}星\n💬 ${r.desc}`;
-                    const url = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(r.name + ' ' + r.suburb + ' Sydney')}`;
+                    const url = `https://www.google.com/maps/search/?api=1&query=` + encodeURIComponent(r.name + ' ' + r.suburb + ' Sydney');
                     
                     if (navigator.share) {
                         navigator.share({
@@ -350,10 +349,9 @@
                     }
                 },
 
-                // ✨ 新增：点击列表卡片打开弹窗
                 openModal(restaurant) {
                     this.randomResult = restaurant;
-                    this.isRandomPick = false; // 标记为非随机
+                    this.isRandomPick = false; 
                     this.showRandomizer = true;
                     this.isReporting = false;
                     this.reportText = '报错';
@@ -369,7 +367,7 @@
                     }
                     const randomIndex = Math.floor(Math.random() * pool.length);
                     this.randomResult = pool[randomIndex];
-                    this.isRandomPick = true; // 标记为随机
+                    this.isRandomPick = true; 
                     this.showRandomizer = true;
                 },
 
@@ -388,7 +386,6 @@
                         this.reportText = '已反馈';
                         setTimeout(() => {
                             if(this.showRandomizer && this.isRandomPick) {
-                                // 只有在随机模式下，报错后才自动跳下一个。如果是详情模式，保留在当前页。
                                 this.showRandomizer = false;
                                 this.pickRandom(); 
                             }
@@ -448,6 +445,7 @@
                         
                         const query = this.search.toLowerCase();
                         const matchesSearch = r.name.toLowerCase().includes(query) || 
+                                            r.suburb.toLowerCase().includes(query) ||
                                             r.displayCategory.toLowerCase().includes(query) || 
                                             r.desc.toLowerCase().includes(query) ||
                                             r.dishes.some(d => d.toLowerCase().includes(query));

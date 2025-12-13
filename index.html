@@ -183,7 +183,7 @@
                             </div>
 
                             <div x-show="randomResult?.isGoodFood" class="flex items-center gap-1 bg-gray-900 px-2 py-1 rounded shadow-sm border border-gray-700">
-                                <span class="text-xs font-bold text-gold" x-text="'🏆 Good Food ' + randomResult?.goodFoodYear"></span>
+                                <span class="text-xs font-bold text-gold" x-text="'🏆' + randomResult?.goodFoodYear"></span>
                             </div>
                         </div>
 
@@ -261,7 +261,7 @@
                          <div class="absolute bottom-0 left-0 right-0 h-10 bg-gradient-to-t from-black/5 to-transparent"></div>
                          
                          <div x-show="r.isGoodFood" class="absolute top-2 right-2 z-20 bg-gray-900/90 backdrop-blur border border-white/20 px-2 py-1 rounded shadow-lg flex items-center gap-1">
-                            <span class="text-[10px] font-bold text-gold tracking-wide" x-text="'🏆 GOOD FOOD ' + r.goodFoodYear"></span>
+                            <span class="text-[10px] font-bold text-gold tracking-wide" x-text="'🏆' + r.goodFoodYear"></span>
                          </div>
                     </div>
 
@@ -486,7 +486,7 @@
                     let text = `发现一家好吃的！\n🏠 ${r.name}`;
                     // 动态分享文案
                     if(r.isGoodFood) text += `\n🏆 SMH Good Food Guide ${r.goodFoodYear}`;
-                    text += `\n📍 ${r.suburb}\n⭐ 推荐指数: ${r.recommendationLevel}星\n💬 ${r.desc}`;
+                    text += `\n📍 ${r.suburb}\n💬 ${r.desc}`;
                     
                     const url = `https://www.google.com/maps/search/?api=1&query=` + encodeURIComponent(r.name + ' ' + r.suburb + ' Sydney');
                     const fullText = `${text}\n🔗 导航: ${url}`;

@@ -192,7 +192,7 @@
                     <span class="text-xs font-bold text-gray-500 group-hover:text-orange-600">再选</span>
                 </button>
 
-                <a :href="randomResult ? 'https://www.xiaohongshu.com/search_result?keyword=' + encodeURIComponent('悉尼 ' + randomResult.name) : '#'" 
+                <a :href="randomResult ? 'https://www.google.com/search?q=site:xiaohongshu.com ' + encodeURIComponent('悉尼 ' + randomResult.name + ' 食评') : '#'" 
                    target="_blank"
                    class="flex flex-col items-center justify-center py-4 hover:bg-red-50 hover:text-red-500 transition-colors group">
                     <span class="text-xl mb-1 group-hover:-translate-y-1 transition-transform">📕</span>
@@ -276,7 +276,7 @@
                             
                             <div class="flex items-center gap-2 shrink-0">
                                 <a @click.stop 
-                                   :href="'https://www.xiaohongshu.com/search_result?keyword=' + encodeURIComponent('悉尼 ' + r.name)" 
+                                   :href="'https://www.google.com/search?q=site:xiaohongshu.com ' + encodeURIComponent('悉尼 ' + r.name + ' 食评')" 
                                    target="_blank"
                                    class="text-[10px] text-gray-400 hover:text-red-500 flex items-center gap-0.5 transition-colors border border-transparent hover:border-red-100 rounded px-1.5 py-1 hover:bg-red-50">
                                     <span>📕</span> 食评

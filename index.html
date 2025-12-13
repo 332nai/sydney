@@ -11,12 +11,18 @@
     
     <style>
         body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; }
-        /* 隐藏滚动条但允许滚动 */
         .hide-scroll::-webkit-scrollbar { display: none; }
         .hide-scroll { -ms-overflow-style: none; scrollbar-width: none; }
         [x-cloak] { display: none !important; }
         .glass-effect { background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px); }
         .btn-transition { transition: all 0.2s ease-in-out; }
+        /* 金色渐变文字 */
+        .text-gold {
+            background: linear-gradient(to right, #bf953f, #fcf6ba, #b38728, #fbf5b7, #aa771c);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent; 
+        }
     </style>
 </head>
 <body class="bg-gray-50 text-gray-800 antialiased" x-data="diningApp()">
@@ -101,10 +107,20 @@
                     <div class="border-t border-dashed border-gray-200 pt-2 pb-2" :class="expanded.stars ? 'overflow-visible' : 'overflow-x-auto hide-scroll'">
                         <div :class="expanded.stars ? 'flex flex-wrap gap-2 items-center' : 'flex space-x-2 min-w-max items-center'">
                             <div @click="toggleExpand('stars')" class="cursor-pointer flex items-center gap-1 mr-2 px-1 py-1 rounded hover:bg-gray-100 transition-colors select-none">
-                                <span class="text-xs font-bold text-gray-400 uppercase w-12">⭐ 推荐</span>
+                                <span class="text-xs font-bold text-gray-400 uppercase w-12">⭐ 榜单</span>
                                 <span class="text-[8px] text-gray-400" x-text="expanded.stars ? '▲' : '▼'"></span>
                             </div>
-                            <button @click="resetFilter('stars')" :class="activeStars.length === 0 ? 'bg-yellow-500 text-white border-yellow-500' : 'bg-white text-gray-600 border-gray-200 hover:bg-yellow-50'" class="btn-transition px-3 py-1.5 rounded-full text-xs font-medium border">全部</button>
+                            
+                            <button @click="resetFilter('stars'); onlyGoodFood = false" :class="(activeStars.length === 0 && !onlyGoodFood) ? 'bg-yellow-500 text-white border-yellow-500' : 'bg-white text-gray-600 border-gray-200 hover:bg-yellow-50'" class="btn-transition px-3 py-1.5 rounded-full text-xs font-medium border">全部</button>
+                            
+                            <button @click="onlyGoodFood = !onlyGoodFood; currentPage = 1" 
+                                    :class="onlyGoodFood ? 'bg-gray-900 text-amber-300 border-gray-900 ring-2 ring-amber-300/50' : 'bg-white text-gray-600 border-gray-200 hover:bg-gray-50'" 
+                                    class="btn-transition px-3 py-1.5 rounded-full text-xs font-bold border flex items-center gap-1">
+                                <span>🏆 Good Food Guide 2025</span>
+                            </button>
+
+                            <div class="w-px h-4 bg-gray-200 mx-1"></div>
+
                             <button @click="toggleFilter('activeStars', 3)" :class="activeStars.includes(3) ? 'bg-yellow-500 text-white border-yellow-500' : 'bg-white text-gray-600 border-gray-200 hover:bg-yellow-50'" class="btn-transition px-4 py-1.5 rounded-full text-xs font-medium border">⭐⭐⭐</button>
                             <button @click="toggleFilter('activeStars', 2)" :class="activeStars.includes(2) ? 'bg-yellow-500 text-white border-yellow-500' : 'bg-white text-gray-600 border-gray-200 hover:bg-yellow-50'" class="btn-transition px-4 py-1.5 rounded-full text-xs font-medium border">⭐⭐</button>
                             <button @click="toggleFilter('activeStars', 1)" :class="activeStars.includes(1) ? 'bg-yellow-500 text-white border-yellow-500' : 'bg-white text-gray-600 border-gray-200 hover:bg-yellow-50'" class="btn-transition px-4 py-1.5 rounded-full text-xs font-medium border">⭐</button>
@@ -115,9 +131,9 @@
                 <div class="flex justify-between items-center py-2 cursor-pointer select-none border-t border-dashed border-gray-200 mt-2" @click="showFilters = !showFilters">
                     <span class="text-xs font-bold text-gray-400 uppercase tracking-wider flex items-center gap-2">
                         <span>筛选条件</span>
-                        <span x-show="!showFilters && (activeSuburbs.length + activeCategories.length + activePrices.length + activeStars.length) > 0" 
+                        <span x-show="!showFilters && (activeSuburbs.length + activeCategories.length + activePrices.length + activeStars.length + (onlyGoodFood?1:0)) > 0" 
                               class="bg-orange-100 text-orange-600 px-1.5 rounded-full text-[10px]" x-cloak>
-                             已选 <span x-text="activeSuburbs.length + activeCategories.length + activePrices.length + activeStars.length"></span>
+                             已选 <span x-text="activeSuburbs.length + activeCategories.length + activePrices.length + activeStars.length + (onlyGoodFood?1:0)"></span>
                         </span>
                     </span>
                     <button class="text-xs font-bold text-gray-500 hover:text-gray-900 flex items-center gap-1 transition-colors">
@@ -157,13 +173,17 @@
 
                 <div class="p-6 pt-2 flex flex-col items-center justify-center text-center -mt-8 relative z-10">
                     <div x-show="randomResult" class="w-full flex flex-col items-center" x-transition:enter="transition ease-out duration-300 transform" x-transition:enter-start="opacity-0 translate-y-2" x-transition:enter-end="opacity-100 translate-y-0">
-                        <div class="flex items-center gap-2 mb-4">
+                        <div class="flex flex-wrap justify-center gap-2 mb-4">
                             <span class="text-xs font-bold uppercase px-2 py-1 rounded bg-gray-100 text-gray-600" x-text="randomResult?.suburb"></span>
                             <span class="text-xs font-bold px-2 py-1 rounded bg-teal-50 text-teal-700" x-text="randomResult?.displayCategory"></span>
                             
                             <div class="flex items-center gap-1 bg-orange-50 px-2 py-1 rounded">
                                 <span class="text-xs tracking-tight text-yellow-500" x-text="getStars(randomResult?.recommendationLevel)"></span>
                                 <span class="text-xs font-bold text-orange-500 ml-1 border-l border-orange-200 pl-1" x-text="getPriceIcon(randomResult?.priceLevel)"></span>
+                            </div>
+
+                            <div x-show="randomResult?.isGoodFood2025" class="flex items-center gap-1 bg-gray-900 px-2 py-1 rounded shadow-sm border border-gray-700">
+                                <span class="text-xs font-bold text-gold">🏆 Good Food 2025</span>
                             </div>
                         </div>
 
@@ -199,8 +219,6 @@
                     <span class="text-xs font-bold text-gray-900 group-hover:text-green-600">导航</span>
                 </a>
                 
-
-
                 <button @click="copyKeyword(randomResult?.name)" 
                         class="flex flex-col items-center justify-center py-4 hover:bg-red-50 hover:text-red-500 transition-colors group">
                     <span class="text-xl mb-1 group-hover:-translate-y-1 transition-transform">📕</span>
@@ -208,7 +226,7 @@
                 </button>
 
                 <button @click="shareRestaurant(randomResult)" 
-class="flex flex-col items-center justify-center py-4 hover:bg-blue-50 hover:text-blue-600 transition-colors group">
+                    class="flex flex-col items-center justify-center py-4 hover:bg-blue-50 hover:text-blue-600 transition-colors group">
                     <span class="text-xl mb-1 group-hover:-translate-y-1 transition-transform">📤</span>
                     <span class="text-xs font-bold text-gray-500 group-hover:text-blue-600">分享</span>
                 </button>
@@ -241,6 +259,10 @@ class="flex flex-col items-center justify-center py-4 hover:bg-blue-50 hover:tex
                              <div class="w-full h-full flex items-center justify-center text-gray-300 text-2xl">🍽️</div>
                          </template>
                          <div class="absolute bottom-0 left-0 right-0 h-10 bg-gradient-to-t from-black/5 to-transparent"></div>
+                         
+                         <div x-show="r.isGoodFood2025" class="absolute top-2 right-2 z-20 bg-gray-900/90 backdrop-blur border border-white/20 px-2 py-1 rounded shadow-lg flex items-center gap-1">
+                            <span class="text-[10px] font-bold text-gold tracking-wide">🏆 GOOD FOOD</span>
+                         </div>
                     </div>
 
                     <div class="p-5 flex-1 flex flex-col pl-6">
@@ -347,6 +369,9 @@ class="flex flex-col items-center justify-center py-4 hover:bg-blue-50 hover:tex
                 activeCategories: [],
                 activePrices: [],
                 activeStars: [],
+                
+                // 新增状态：只看 Good Food Guide
+                onlyGoodFood: false,
 
                 currentPage: 1,
                 itemsPerPage: 24,
@@ -355,7 +380,6 @@ class="flex flex-col items-center justify-center py-4 hover:bg-blue-50 hover:tex
                 categories: [], 
                 restaurants: [], 
 
-                // ✨ 内置通用图库
                 defaultImages: {
                     'Japanese': 'https://images.unsplash.com/photo-1580822184713-fc54006efa4e?w=800&q=80',
                     'Korean': 'https://images.unsplash.com/photo-1580651315530-69c8e0026377?w=800&q=80',
@@ -402,7 +426,9 @@ class="flex flex-col items-center justify-center py-4 hover:bg-blue-50 hover:tex
                                 desc: row.desc || '暂无描述',
                                 dishes: row.dishes ? row.dishes.split(/,|，/).map(d => d.trim()) : [],
                                 
-                                // ✨ 核心图片逻辑
+                                // 新增：读取 goodfood 列
+                                isGoodFood2025: (row.goodfood && String(row.goodfood).includes('2025')) || false,
+
                                 image: row.image && row.image.startsWith('http') ? row.image.trim() : (this.defaultImages[cleanCat] || this.defaultImages['Other'])
                             };
                         });
@@ -423,7 +449,6 @@ class="flex flex-col items-center justify-center py-4 hover:bg-blue-50 hover:tex
                     this.expanded[section] = !this.expanded[section];
                 },
 
-                // ✨ 新增：只复制关键词，不跳转
                 copyKeyword(name) {
                     if (!name) return;
                     const text = `悉尼 ${name}`;
@@ -432,25 +457,25 @@ class="flex flex-col items-center justify-center py-4 hover:bg-blue-50 hover:tex
                             alert(`已复制关键词："${text}"\n请打开小红书粘贴搜索`);
                         }).catch(err => {
                             console.error('Copy failed', err);
-                            // 降级处理
                             prompt("请手动复制搜索词：", text);
                         });
                     } else {
-                         // 浏览器不支持 clipboard API 的降级处理
                          prompt("请手动复制搜索词：", text);
                     }
                 },
 
                 shareRestaurant(r) {
                     if (!r) return;
-                    const text = `发现一家好吃的！\n🏠 ${r.name}\n📍 ${r.suburb}\n⭐ 推荐指数: ${r.recommendationLevel}星\n💬 ${r.desc}`;
+                    let text = `发现一家好吃的！\n🏠 ${r.name}`;
+                    if(r.isGoodFood2025) text += `\n🏆 SMH Good Food Guide 2025`;
+                    text += `\n📍 ${r.suburb}\n⭐ 推荐指数: ${r.recommendationLevel}星\n💬 ${r.desc}`;
+                    
                     const url = `https://www.google.com/maps/search/?api=1&query=` + encodeURIComponent(r.name + ' ' + r.suburb + ' Sydney');
                     const fullText = `${text}\n🔗 导航: ${url}`;
                     
                     navigator.clipboard.writeText(fullText).then(() => {
                         alert('餐厅信息已复制到剪贴板！');
                     }).catch(err => {
-                        console.error('复制失败', err);
                         alert('复制失败，请手动截图分享');
                     });
                 },
@@ -577,6 +602,7 @@ class="flex flex-col items-center justify-center py-4 hover:bg-blue-50 hover:tex
                         const matchesCategory = this.activeCategories.length === 0 || this.activeCategories.includes(r.category);
                         const matchesPrice = this.activePrices.length === 0 || this.activePrices.includes(r.priceLevel);
                         const matchesStars = this.activeStars.length === 0 || this.activeStars.includes(r.recommendationLevel);
+                        const matchesGoodFood = !this.onlyGoodFood || r.isGoodFood2025;
                         
                         const query = this.search.toLowerCase();
                         const matchesSearch = r.name.toLowerCase().includes(query) || 
@@ -584,7 +610,7 @@ class="flex flex-col items-center justify-center py-4 hover:bg-blue-50 hover:tex
                                             r.displayCategory.toLowerCase().includes(query) || 
                                             r.desc.toLowerCase().includes(query) ||
                                             r.dishes.some(d => d.toLowerCase().includes(query));
-                        return matchesSuburb && matchesCategory && matchesPrice && matchesStars && matchesSearch;
+                        return matchesSuburb && matchesCategory && matchesPrice && matchesStars && matchesGoodFood && matchesSearch;
                     });
                 },
 

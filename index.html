@@ -83,10 +83,10 @@
                 <div class="overflow-x-auto hide-scroll border-t border-dashed border-gray-200 pt-2">
                     <div class="flex space-x-2 min-w-max items-center">
                         <span class="text-xs font-bold text-gray-400 uppercase mr-2 w-12">⭐ 推荐</span>
-                        <button @click="resetFilter('stars')" :class="activeStars.length === 0 ? 'bg-amber-400 text-white border-amber-400' : 'bg-white text-gray-600 border-gray-200 hover:bg-amber-50'" class="btn-transition px-3 py-1.5 rounded-full text-xs font-medium border">全部</button>
-                        <button @click="toggleFilter('activeStars', 1)" :class="activeStars.includes(1) ? 'bg-amber-400 text-white border-amber-400' : 'bg-white text-gray-600 border-gray-200 hover:bg-amber-50'" class="btn-transition px-4 py-1.5 rounded-full text-xs font-medium border">⭐</button>
-                        <button @click="toggleFilter('activeStars', 2)" :class="activeStars.includes(2) ? 'bg-amber-400 text-white border-amber-400' : 'bg-white text-gray-600 border-gray-200 hover:bg-amber-50'" class="btn-transition px-4 py-1.5 rounded-full text-xs font-medium border">⭐⭐</button>
-                        <button @click="toggleFilter('activeStars', 3)" :class="activeStars.includes(3) ? 'bg-amber-400 text-white border-amber-400' : 'bg-white text-gray-600 border-gray-200 hover:bg-amber-50'" class="btn-transition px-4 py-1.5 rounded-full text-xs font-medium border">⭐⭐⭐</button>
+                        <button @click="resetFilter('stars')" :class="activeStars.length === 0 ? 'bg-yellow-500 text-white border-yellow-500' : 'bg-white text-gray-600 border-gray-200 hover:bg-yellow-50'" class="btn-transition px-3 py-1.5 rounded-full text-xs font-medium border">全部</button>
+                        <button @click="toggleFilter('activeStars', 3)" :class="activeStars.includes(3) ? 'bg-yellow-500 text-white border-yellow-500' : 'bg-white text-gray-600 border-gray-200 hover:bg-yellow-50'" class="btn-transition px-4 py-1.5 rounded-full text-xs font-medium border">⭐⭐⭐</button>
+                        <button @click="toggleFilter('activeStars', 2)" :class="activeStars.includes(2) ? 'bg-yellow-500 text-white border-yellow-500' : 'bg-white text-gray-600 border-gray-200 hover:bg-yellow-50'" class="btn-transition px-4 py-1.5 rounded-full text-xs font-medium border">⭐⭐</button>
+                        <button @click="toggleFilter('activeStars', 1)" :class="activeStars.includes(1) ? 'bg-yellow-500 text-white border-yellow-500' : 'bg-white text-gray-600 border-gray-200 hover:bg-yellow-50'" class="btn-transition px-4 py-1.5 rounded-full text-xs font-medium border">⭐</button>
                     </div>
                 </div>
             </div>
@@ -106,15 +106,14 @@
                     <div class="flex items-center gap-2 mb-4">
                         <span class="text-xs font-bold uppercase px-2 py-1 rounded bg-gray-100 text-gray-600" x-text="randomResult?.suburb"></span>
                         <span class="text-xs font-bold px-2 py-1 rounded bg-teal-50 text-teal-700" x-text="randomResult?.displayCategory"></span>
+                        
+                        <div class="flex items-center gap-1 bg-orange-50 px-2 py-1 rounded">
+                            <span class="text-xs tracking-tight text-yellow-500" x-text="getStars(randomResult?.recommendationLevel)"></span>
+                            <span class="text-xs font-bold text-orange-500 ml-1 border-l border-orange-200 pl-1" x-text="getPriceIcon(randomResult?.priceLevel)"></span>
+                        </div>
                     </div>
 
                     <h2 class="text-2xl md:text-3xl font-black text-gray-900 mb-3 leading-tight line-clamp-2 h-16 flex items-center justify-center" x-text="randomResult?.name"></h2>
-                    
-                    <div class="flex flex-col items-center justify-center mb-4">
-                        <span class="text-sm tracking-tight mb-1" x-text="getStars(randomResult?.recommendationLevel)"></span>
-                        <span class="text-sm font-bold px-3 py-1 bg-orange-50 text-orange-500 rounded-full" x-text="getPriceIcon(randomResult?.priceLevel)"></span>
-                    </div>
-
                     <p class="text-sm text-gray-500 mb-6 leading-relaxed line-clamp-3 px-4 h-[4.5em]" x-text="randomResult?.desc"></p>
 
                     <div class="flex flex-wrap justify-center gap-1.5">
@@ -167,18 +166,20 @@
                     <div class="absolute top-0 left-0 w-1 h-full transition-colors duration-300" :class="getSuburbColor(r.suburb)"></div>
                     <div class="p-5 flex-1 flex flex-col pl-6">
                         <div class="flex justify-between items-start mb-3">
-                            <div class="flex flex-wrap gap-2 content-start">
-                                <span class="text-[10px] font-bold uppercase px-1.5 py-0.5 rounded bg-gray-100 text-gray-500 h-fit" x-text="r.suburb"></span>
-                                <span class="text-[10px] font-bold uppercase px-1.5 py-0.5 rounded bg-teal-50 text-teal-700 border border-teal-100 h-fit" x-text="r.displayCategory"></span>
+                            <div class="flex flex-col gap-2">
+                                <div class="flex flex-wrap gap-2">
+                                    <span class="text-[10px] font-bold uppercase px-1.5 py-0.5 rounded bg-gray-100 text-gray-500" x-text="r.suburb"></span>
+                                    <span class="text-[10px] font-bold uppercase px-1.5 py-0.5 rounded bg-teal-50 text-teal-700 border border-teal-100" x-text="r.displayCategory"></span>
+                                </div>
                             </div>
                             
                             <div class="flex flex-col items-end gap-0.5">
-                                <span class="text-[10px] leading-none" x-text="getStars(r.recommendationLevel)"></span>
-                                <div class="text-xs font-bold tracking-widest leading-none" :class="{
+                                <div class="text-xs font-bold tracking-widest" :class="{
                                     'text-green-600': r.priceLevel == 1,
                                     'text-orange-500': r.priceLevel == 2,
                                     'text-purple-600': r.priceLevel == 3
                                 }" x-text="getPriceIcon(r.priceLevel)"></div>
+                                <span class="text-xs tracking-tight text-yellow-500 h-4" x-text="getStars(r.recommendationLevel)"></span>
                             </div>
                         </div>
                         
@@ -245,14 +246,13 @@
                 activeSuburbs: [],
                 activeCategories: [],
                 activePrices: [],
-                // 🔥 新增：Stars 状态
-                activeStars: [],
+                activeStars: [], // ⭐ 新增：星星筛选状态
 
                 currentPage: 1,
                 itemsPerPage: 48,
 
                 suburbs: [],
-                categories: [],
+                categories: [], 
                 restaurants: [], 
 
                 async init() {
@@ -273,7 +273,7 @@
                                 id: row.id || ('temp_' + index),
                                 name: row.name || '未知餐厅',
                                 suburb: row.suburb ? row.suburb.trim() : 'Other',
-                                category: rawCat,
+                                category: rawCat,        
                                 displayCategory: rawCat, 
                                 priceLevel: parseInt(row.priceLevel) || 1,
                                 recommendationLevel: parseInt(row.level) || 0,
@@ -350,7 +350,7 @@
                     if (type === 'suburbs') this.activeSuburbs = [];
                     if (type === 'categories') this.activeCategories = [];
                     if (type === 'prices') this.activePrices = [];
-                    if (type === 'stars') this.activeStars = []; // 🔥 重置 Stars
+                    if (type === 'stars') this.activeStars = []; // ⭐ 新增重置
                     this.currentPage = 1; 
                     window.scrollTo({top: 0, behavior: 'smooth'});
                 },
@@ -377,7 +377,7 @@
                         const matchesSuburb = this.activeSuburbs.length === 0 || this.activeSuburbs.includes(r.suburb);
                         const matchesCategory = this.activeCategories.length === 0 || this.activeCategories.includes(r.category);
                         const matchesPrice = this.activePrices.length === 0 || this.activePrices.includes(r.priceLevel);
-                        // 🔥 过滤逻辑：Stars
+                        // ⭐ 新增：星星筛选逻辑
                         const matchesStars = this.activeStars.length === 0 || this.activeStars.includes(r.recommendationLevel);
                         
                         const query = this.search.toLowerCase();

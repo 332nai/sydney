@@ -182,7 +182,7 @@
                                 <span class="text-xs font-bold text-orange-500 ml-1 border-l border-orange-200 pl-1" x-text="getPriceIcon(randomResult?.priceLevel)"></span>
                             </div>
 
-                            <div x-show="randomResult?.isGoodFood2025" class="flex items-center gap-1 bg-gray-900 px-2 py-1 rounded shadow-sm border border-gray-700">
+                            <div x-show="randomResult?.isGoodFood2026" class="flex items-center gap-1 bg-gray-900 px-2 py-1 rounded shadow-sm border border-gray-700">
                                 <span class="text-xs font-bold text-gold">🏆 Good Food 2026</span>
                             </div>
                         </div>
@@ -260,7 +260,7 @@
                          </template>
                          <div class="absolute bottom-0 left-0 right-0 h-10 bg-gradient-to-t from-black/5 to-transparent"></div>
                          
-                         <div x-show="r.isGoodFood2025" class="absolute top-2 right-2 z-20 bg-gray-900/90 backdrop-blur border border-white/20 px-2 py-1 rounded shadow-lg flex items-center gap-1">
+                         <div x-show="r.isGoodFood2026" class="absolute top-2 right-2 z-20 bg-gray-900/90 backdrop-blur border border-white/20 px-2 py-1 rounded shadow-lg flex items-center gap-1">
                             <span class="text-[10px] font-bold text-gold tracking-wide">🏆 GOOD FOOD</span>
                          </div>
                     </div>
@@ -427,7 +427,7 @@
                                 dishes: row.dishes ? row.dishes.split(/,|，/).map(d => d.trim()) : [],
                                 
                                 // 新增：读取 goodfood 列
-                                isGoodFood2025: (row.goodfood && String(row.goodfood).includes('2025')) || false,
+                                isGoodFood2026: (row.goodfood && String(row.goodfood).includes('2026')) || false,
 
                                 image: row.image && row.image.startsWith('http') ? row.image.trim() : (this.defaultImages[cleanCat] || this.defaultImages['Other'])
                             };
@@ -467,7 +467,7 @@
                 shareRestaurant(r) {
                     if (!r) return;
                     let text = `发现一家好吃的！\n🏠 ${r.name}`;
-                    if(r.isGoodFood2025) text += `\n🏆 SMH Good Food Guide 2025`;
+                    if(r.isGoodFood2026) text += `\n🏆 SMH Good Food Guide 2026`;
                     text += `\n📍 ${r.suburb}\n⭐ 推荐指数: ${r.recommendationLevel}星\n💬 ${r.desc}`;
                     
                     const url = `https://www.google.com/maps/search/?api=1&query=` + encodeURIComponent(r.name + ' ' + r.suburb + ' Sydney');
@@ -602,7 +602,7 @@
                         const matchesCategory = this.activeCategories.length === 0 || this.activeCategories.includes(r.category);
                         const matchesPrice = this.activePrices.length === 0 || this.activePrices.includes(r.priceLevel);
                         const matchesStars = this.activeStars.length === 0 || this.activeStars.includes(r.recommendationLevel);
-                        const matchesGoodFood = !this.onlyGoodFood || r.isGoodFood2025;
+                        const matchesGoodFood = !this.onlyGoodFood || r.isGoodFood2026;
                         
                         const query = this.search.toLowerCase();
                         const matchesSearch = r.name.toLowerCase().includes(query) || 

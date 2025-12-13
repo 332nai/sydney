@@ -11,10 +11,11 @@
     
     <style>
         body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; }
+        .hide-scroll::-webkit-scrollbar { display: none; }
+        .hide-scroll { -ms-overflow-style: none; scrollbar-width: none; }
         [x-cloak] { display: none !important; }
         .glass-effect { background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px); }
         .btn-transition { transition: all 0.2s ease-in-out; }
-        /* 移除 hide-scroll，因为我们改为换行了 */
     </style>
 </head>
 <body class="bg-gray-50 text-gray-800 antialiased" x-data="diningApp()">
@@ -27,10 +28,10 @@
                     
                     <div class="flex items-center justify-center md:justify-start gap-3 mt-3">
                         <button @click="shareApp()" class="text-[11px] font-medium text-gray-500 hover:text-orange-600 flex items-center gap-1 transition-colors bg-white border border-gray-200 px-2 py-1 rounded-lg shadow-sm">
-                            📤 分享
+                            📤 分享给朋友
                         </button>
                         <a href="mailto:your_email@example.com?subject=悉尼吃饭指南反馈" class="text-[11px] font-medium text-gray-500 hover:text-orange-600 flex items-center gap-1 transition-colors bg-white border border-gray-200 px-2 py-1 rounded-lg shadow-sm">
-                            💬 反馈
+                            💬 反馈给作者
                         </a>
                     </div>
                 </div>
@@ -63,10 +64,10 @@
                     </button>
                 </div>
 
-                <div x-show="showFilters" x-collapse class="space-y-4 pb-2">
-                    
-                    <div>
-                        <div class="flex flex-wrap gap-2 items-center"> <span class="text-xs font-bold text-gray-400 uppercase mr-1 w-12 shrink-0">📍 区域</span>
+                <div x-show="showFilters" x-collapse class="space-y-3">
+                    <div class="overflow-x-auto hide-scroll">
+                        <div class="flex space-x-2 min-w-max items-center">
+                            <span class="text-xs font-bold text-gray-400 uppercase mr-2 w-12">📍 区域</span>
                             <button @click="resetFilter('suburbs')" :class="activeSuburbs.length === 0 ? 'bg-gray-800 text-white border-gray-800' : 'bg-white text-gray-600 border-gray-200 hover:bg-gray-50'" class="btn-transition px-3 py-1.5 rounded-full text-xs font-medium border">全部</button>
                             <template x-for="suburb in suburbs" :key="suburb">
                                 <button @click="toggleFilter('activeSuburbs', suburb)" :class="activeSuburbs.includes(suburb) ? 'bg-gray-800 text-white border-gray-800' : 'bg-white text-gray-600 border-gray-200 hover:bg-gray-50'" class="btn-transition px-3 py-1.5 rounded-full text-xs font-medium border" x-text="suburb"></button>
@@ -74,8 +75,9 @@
                         </div>
                     </div>
 
-                    <div class="border-t border-dashed border-gray-200 pt-2">
-                        <div class="flex flex-wrap gap-2 items-center"> <span class="text-xs font-bold text-gray-400 uppercase mr-1 w-12 shrink-0">🍴 类别</span>
+                    <div class="overflow-x-auto hide-scroll border-t border-dashed border-gray-200 pt-2">
+                        <div class="flex space-x-2 min-w-max items-center">
+                            <span class="text-xs font-bold text-gray-400 uppercase mr-2 w-12">🍴 类别</span>
                             <button @click="resetFilter('categories')" :class="activeCategories.length === 0 ? 'bg-teal-600 text-white border-teal-600' : 'bg-white text-gray-600 border-gray-200 hover:bg-teal-50'" class="btn-transition px-3 py-1.5 rounded-full text-xs font-medium border">全部</button>
                             <template x-for="cat in categories" :key="cat">
                                 <button @click="toggleFilter('activeCategories', cat)" :class="activeCategories.includes(cat) ? 'bg-teal-600 text-white border-teal-600' : 'bg-white text-gray-600 border-gray-200 hover:bg-teal-50'" class="btn-transition px-3 py-1.5 rounded-full text-xs font-medium border" x-text="cat"></button>
@@ -83,9 +85,9 @@
                         </div>
                     </div>
 
-                    <div class="border-t border-dashed border-gray-200 pt-2">
-                        <div class="flex flex-wrap gap-2 items-center">
-                            <span class="text-xs font-bold text-gray-400 uppercase mr-1 w-12 shrink-0">💰 价位</span>
+                    <div class="overflow-x-auto hide-scroll border-t border-dashed border-gray-200 pt-2">
+                        <div class="flex space-x-2 min-w-max items-center">
+                            <span class="text-xs font-bold text-gray-400 uppercase mr-2 w-12">💰 价位</span>
                             <button @click="resetFilter('prices')" :class="activePrices.length === 0 ? 'bg-orange-500 text-white border-orange-500' : 'bg-white text-gray-600 border-gray-200 hover:bg-orange-50'" class="btn-transition px-3 py-1.5 rounded-full text-xs font-medium border">全部</button>
                             <button @click="toggleFilter('activePrices', 1)" :class="activePrices.includes(1) ? 'bg-orange-500 text-white border-orange-500' : 'bg-white text-gray-600 border-gray-200 hover:bg-orange-50'" class="btn-transition px-4 py-1.5 rounded-full text-xs font-medium border">$ (20内)</button>
                             <button @click="toggleFilter('activePrices', 2)" :class="activePrices.includes(2) ? 'bg-orange-500 text-white border-orange-500' : 'bg-white text-gray-600 border-gray-200 hover:bg-orange-50'" class="btn-transition px-4 py-1.5 rounded-full text-xs font-medium border">$$ (20-40)</button>
@@ -93,9 +95,9 @@
                         </div>
                     </div>
 
-                    <div class="border-t border-dashed border-gray-200 pt-2">
-                        <div class="flex flex-wrap gap-2 items-center">
-                            <span class="text-xs font-bold text-gray-400 uppercase mr-1 w-12 shrink-0">⭐ 推荐</span>
+                    <div class="overflow-x-auto hide-scroll border-t border-dashed border-gray-200 pt-2 pb-2">
+                        <div class="flex space-x-2 min-w-max items-center">
+                            <span class="text-xs font-bold text-gray-400 uppercase mr-2 w-12">⭐ 推荐</span>
                             <button @click="resetFilter('stars')" :class="activeStars.length === 0 ? 'bg-yellow-500 text-white border-yellow-500' : 'bg-white text-gray-600 border-gray-200 hover:bg-yellow-50'" class="btn-transition px-3 py-1.5 rounded-full text-xs font-medium border">全部</button>
                             <button @click="toggleFilter('activeStars', 3)" :class="activeStars.includes(3) ? 'bg-yellow-500 text-white border-yellow-500' : 'bg-white text-gray-600 border-gray-200 hover:bg-yellow-50'" class="btn-transition px-4 py-1.5 rounded-full text-xs font-medium border">⭐⭐⭐</button>
                             <button @click="toggleFilter('activeStars', 2)" :class="activeStars.includes(2) ? 'bg-yellow-500 text-white border-yellow-500' : 'bg-white text-gray-600 border-gray-200 hover:bg-yellow-50'" class="btn-transition px-4 py-1.5 rounded-full text-xs font-medium border">⭐⭐</button>
@@ -113,9 +115,12 @@
         <div class="bg-white rounded-2xl shadow-2xl w-full max-w-md relative z-10 overflow-hidden flex flex-col" 
              x-transition:enter="transition ease-out duration-200" x-transition:enter-start="opacity-0 scale-95" x-transition:enter-end="opacity-100 scale-100">
             
+            <button @click="showRandomizer = false" class="absolute top-3 right-3 z-20 w-8 h-8 flex items-center justify-center rounded-full bg-gray-100 text-gray-400 hover:bg-gray-200 hover:text-gray-600 transition-colors">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+            </button>
+
             <div class="p-6 h-[320px] flex flex-col items-center justify-center text-center relative">
-                <div class="absolute top-4 text-xs text-gray-300 font-bold tracking-widest uppercase" 
-                     x-text="modalMode === 'random' ? 'IT\'S FATE!' : 'RESTAURANT DETAILS'"></div>
+                <div class="absolute top-4 text-xs text-gray-300 font-bold tracking-widest uppercase" x-text="isRandomPick ? 'IT\'S FATE!' : 'RESTAURANT DETAIL'"></div>
 
                 <div x-show="randomResult" class="w-full flex flex-col items-center" x-transition:enter="transition ease-out duration-300 transform" x-transition:enter-start="opacity-0 translate-y-2" x-transition:enter-end="opacity-100 translate-y-0">
                     <div class="flex items-center gap-2 mb-4">
@@ -146,30 +151,20 @@
                     <span class="text-xl mb-1 group-hover:scale-110 transition-transform" x-text="isReporting ? '⏳' : '⚠️'"></span>
                     <span class="text-xs font-bold text-gray-500 group-hover:text-red-600" x-text="reportText">报错</span>
                 </button>
-
-                <template x-if="modalMode === 'random'">
-                    <button @click="pickRandom()" class="flex flex-col items-center justify-center py-4 hover:bg-orange-50 hover:text-orange-600 transition-colors group">
-                        <span class="text-xl mb-1 group-hover:rotate-180 transition-transform duration-500">🔄</span>
-                        <span class="text-xs font-bold text-gray-500 group-hover:text-orange-600">再选</span>
-                    </button>
-                </template>
-                <template x-if="modalMode === 'manual'">
-                    <button @click="shareRestaurant(randomResult)" class="flex flex-col items-center justify-center py-4 hover:bg-blue-50 hover:text-blue-600 transition-colors group">
-                        <span class="text-xl mb-1 group-hover:-translate-y-1 transition-transform">📤</span>
-                        <span class="text-xs font-bold text-gray-500 group-hover:text-blue-600">分享</span>
-                    </button>
-                </template>
-
+                <button @click="pickRandom()" class="flex flex-col items-center justify-center py-4 hover:bg-orange-50 hover:text-orange-600 transition-colors group">
+                    <span class="text-xl mb-1 group-hover:rotate-180 transition-transform duration-500">🔄</span>
+                    <span class="text-xs font-bold text-gray-500 group-hover:text-orange-600">再选</span>
+                </button>
                 <a :href="randomResult ? 'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(randomResult.name + ' ' + randomResult.suburb + ' Sydney') : '#'" 
                    target="_blank"
                    class="flex flex-col items-center justify-center py-4 hover:bg-green-50 hover:text-green-600 transition-colors group">
                     <span class="text-xl mb-1 group-hover:-translate-y-1 transition-transform">📍</span>
                     <span class="text-xs font-bold text-gray-900 group-hover:text-green-600">导航</span>
                 </a>
-
-                <button @click="showRandomizer = false" class="flex flex-col items-center justify-center py-4 hover:bg-gray-200 hover:text-gray-900 transition-colors group">
-                    <span class="text-xl mb-1">✕</span>
-                    <span class="text-xs font-bold text-gray-500 group-hover:text-gray-900">返回</span>
+                
+                <button @click="shareRestaurant(randomResult)" class="flex flex-col items-center justify-center py-4 hover:bg-blue-50 hover:text-blue-600 transition-colors group">
+                    <span class="text-xl mb-1 group-hover:-translate-y-1 transition-transform">📤</span>
+                    <span class="text-xs font-bold text-gray-500 group-hover:text-blue-600">分享</span>
                 </button>
             </div>
         </div>
@@ -188,7 +183,7 @@
 
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
             <template x-for="r in paginatedRestaurants" :key="r.id">
-                <div @click="openRestaurantCard(r)" class="cursor-pointer group bg-white rounded-xl shadow-sm hover:shadow-lg transition-all duration-300 border border-gray-100 overflow-hidden flex flex-col h-full relative">
+                <div @click="openModal(r)" class="group bg-white rounded-xl shadow-sm hover:shadow-lg transition-all duration-300 border border-gray-100 overflow-hidden flex flex-col h-full relative cursor-pointer">
                     <div class="absolute top-0 left-0 w-1 h-full transition-colors duration-300" :class="getSuburbColor(r.suburb)"></div>
                     <div class="p-5 flex-1 flex flex-col pl-6">
                         <div class="flex justify-between items-start mb-3">
@@ -209,10 +204,11 @@
                             </div>
                         </div>
                         
-                        <div class="group-hover:text-orange-600 transition-colors duration-200 flex items-center gap-2 mb-2">
+                        <a @click.stop :href="'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(r.name + ' ' + r.suburb + ' Sydney')" 
+                           target="_blank" class="group-hover:text-orange-600 transition-colors duration-200 flex items-center gap-2 mb-2 w-max">
                             <h3 class="text-lg font-bold text-gray-900 leading-tight" x-text="r.name"></h3>
                             <svg class="w-4 h-4 text-gray-300 group-hover:text-orange-500 opacity-0 group-hover:opacity-100 transition-opacity" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg>
-                        </div>
+                        </a>
                         <p class="text-gray-600 text-sm mb-4 leading-relaxed line-clamp-3" x-text="r.desc"></p>
                         
                         <div class="mt-auto pt-3 border-t border-gray-50 flex justify-between items-start gap-2">
@@ -267,9 +263,7 @@
                 randomResult: null,
                 isReporting: false,
                 reportText: '报错',
-                
-                // ✨ 新增：modalMode 区分是随机打开的还是点开的 'random' | 'manual'
-                modalMode: 'random',
+                isRandomPick: false, // ✨ 新增：用于区分是随机选的还是点开的
 
                 showFilters: true,
 
@@ -324,6 +318,25 @@
                     }
                 },
 
+                // ✨ 新增：用于分享单个餐厅
+                shareRestaurant(r) {
+                    if (!r) return;
+                    const text = `发现一家好吃的！\n🏠 ${r.name}\n📍 ${r.suburb}\n⭐ 推荐指数: ${r.recommendationLevel}星\n💬 ${r.desc}`;
+                    const url = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(r.name + ' ' + r.suburb + ' Sydney')}`;
+                    
+                    if (navigator.share) {
+                        navigator.share({
+                            title: r.name,
+                            text: text,
+                            url: url
+                        }).catch(console.error);
+                    } else {
+                        const fullText = `${text}\n🔗 导航: ${url}`;
+                        navigator.clipboard.writeText(fullText);
+                        alert('餐厅信息已复制，快去发给朋友吧！');
+                    }
+                },
+
                 shareApp() {
                     if (navigator.share) {
                         navigator.share({
@@ -336,23 +349,28 @@
                         alert('链接已复制到剪贴板，快发给朋友吧！');
                     }
                 },
-                
-                // ✨ 新增：分享特定餐厅功能
-                shareRestaurant(r) {
-                    const shareData = {
-                        title: `去吃 ${r.name} 吧!`,
-                        text: `我在悉尼吃饭指南发现了这家店：${r.name} (${r.suburb})，评分 ${'⭐'.repeat(r.recommendationLevel)}。`,
-                        url: window.location.href // 暂时还是分享主页，因为没有详情页路由
-                    };
 
-                    if (navigator.share) {
-                        navigator.share(shareData).catch(console.error);
-                    } else {
-                        // 降级文案
-                        const text = `${shareData.text} 📍 ${r.name} - ${r.suburb}`;
-                        navigator.clipboard.writeText(text);
-                        alert('餐厅信息已复制，去粘贴给朋友吧！');
+                // ✨ 新增：点击列表卡片打开弹窗
+                openModal(restaurant) {
+                    this.randomResult = restaurant;
+                    this.isRandomPick = false; // 标记为非随机
+                    this.showRandomizer = true;
+                    this.isReporting = false;
+                    this.reportText = '报错';
+                },
+
+                pickRandom() {
+                    this.isReporting = false;
+                    this.reportText = '报错';
+                    let pool = this.filteredRestaurants;
+                    if (pool.length === 0) {
+                        alert("当前筛选条件下没有餐厅，请先调整筛选！");
+                        return;
                     }
+                    const randomIndex = Math.floor(Math.random() * pool.length);
+                    this.randomResult = pool[randomIndex];
+                    this.isRandomPick = true; // 标记为随机
+                    this.showRandomizer = true;
                 },
 
                 async reportError(id) {
@@ -369,7 +387,8 @@
                         });
                         this.reportText = '已反馈';
                         setTimeout(() => {
-                            if(this.showRandomizer && this.modalMode === 'random') {
+                            if(this.showRandomizer && this.isRandomPick) {
+                                // 只有在随机模式下，报错后才自动跳下一个。如果是详情模式，保留在当前页。
                                 this.showRandomizer = false;
                                 this.pickRandom(); 
                             }
@@ -434,29 +453,6 @@
                                             r.dishes.some(d => d.toLowerCase().includes(query));
                         return matchesSuburb && matchesCategory && matchesPrice && matchesStars && matchesSearch;
                     });
-                },
-
-                pickRandom() {
-                    this.isReporting = false;
-                    this.reportText = '报错';
-                    let pool = this.filteredRestaurants;
-                    if (pool.length === 0) {
-                        alert("当前筛选条件下没有餐厅，请先调整筛选！");
-                        return;
-                    }
-                    const randomIndex = Math.floor(Math.random() * pool.length);
-                    this.randomResult = pool[randomIndex];
-                    this.modalMode = 'random'; // ✨ 标记为随机模式
-                    this.showRandomizer = true;
-                },
-
-                // ✨ 新增：点击卡片打开详情
-                openRestaurantCard(r) {
-                    this.isReporting = false;
-                    this.reportText = '报错';
-                    this.randomResult = r;
-                    this.modalMode = 'manual'; // ✨ 标记为手动模式
-                    this.showRandomizer = true;
                 },
 
                 getSuburbColor(suburb) {

@@ -192,12 +192,6 @@
                     <span class="text-xs font-bold text-gray-500 group-hover:text-orange-600">再选</span>
                 </button>
 
-                <button @click="copyKeyword(randomResult?.name)" 
-                        class="flex flex-col items-center justify-center py-4 hover:bg-red-50 hover:text-red-500 transition-colors group">
-                    <span class="text-xl mb-1 group-hover:-translate-y-1 transition-transform">📕</span>
-                    <span class="text-xs font-bold text-gray-500 group-hover:text-red-500">复制</span>
-                </button>
-
                 <a :href="randomResult ? 'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(randomResult.name + ' ' + randomResult.suburb + ' Sydney') : '#'" 
                    target="_blank"
                    class="flex flex-col items-center justify-center py-4 hover:bg-green-50 hover:text-green-600 transition-colors group">
@@ -205,7 +199,16 @@
                     <span class="text-xs font-bold text-gray-900 group-hover:text-green-600">导航</span>
                 </a>
                 
-                <button @click="shareRestaurant(randomResult)" class="flex flex-col items-center justify-center py-4 hover:bg-blue-50 hover:text-blue-600 transition-colors group">
+
+
+                <button @click="copyKeyword(randomResult?.name)" 
+                        class="flex flex-col items-center justify-center py-4 hover:bg-red-50 hover:text-red-500 transition-colors group">
+                    <span class="text-xl mb-1 group-hover:-translate-y-1 transition-transform">📕</span>
+                    <span class="text-xs font-bold text-gray-500 group-hover:text-red-500">复制</span>
+                </button>
+
+                <button @click="shareRestaurant(randomResult)" 
+class="flex flex-col items-center justify-center py-4 hover:bg-blue-50 hover:text-blue-600 transition-colors group">
                     <span class="text-xl mb-1 group-hover:-translate-y-1 transition-transform">📤</span>
                     <span class="text-xs font-bold text-gray-500 group-hover:text-blue-600">分享</span>
                 </button>

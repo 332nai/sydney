@@ -322,9 +322,9 @@
                 // ✨ 更新：直接复制内容，不再使用 navigator.share
                 shareRestaurant(r) {
                     if (!r) return;
-                    const text = `这家餐厅看着不错\n ${r.name}，在${r.suburb}`;
-                    const url = `https://www.google.com/maps/search/?api=1&query=` + encodeURIComponent(r.name + ' ' + r.suburb + ' Sydney');
-                    const fullText = `${text}\n🔗 导航: ${url}`;
+                    const text = `要不要吃${r.name}，在${r.suburb}`;
+                    const url = `https://www.google.com/maps/search/?api=1&query=` + encodeURIComponent(r.name + ' ' + r.suburb);
+                    const fullText = `${text}\n 位置是 ${url}`;
                     
                     navigator.clipboard.writeText(fullText).then(() => {
                         alert('餐厅信息已复制到剪贴板！');

@@ -465,7 +465,7 @@
 
                         this.suburbs = Object.keys(suburbCounts)
                             .sort((a, b) => suburbCounts[b] - suburbCounts[a])
-                            .slice(0, 20)
+                            .slice(0, 30)
                             .sort();
 
                         const allCats = this.restaurants.map(r => r.category);

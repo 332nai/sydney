@@ -179,7 +179,7 @@
                          x-text="isRandomPick ? 'IT\'S FATE!' : 'DETAIL'"></div>
                 </div>
 
-<div class="p-6 pt-2 flex flex-col items-center justify-center text-center -mt-8 relative z-10">
+                <div class="p-6 pt-2 flex flex-col items-center justify-center text-center -mt-8 relative z-10">
                     <div x-show="randomResult" class="w-full flex flex-col items-center" x-transition:enter="transition ease-out duration-300 transform" x-transition:enter-start="opacity-0 translate-y-2" x-transition:enter-end="opacity-100 translate-y-0">
                         <div class="flex flex-nowrap justify-center gap-2 mb-4 overflow-x-auto hide-scroll px-4 sm:px-0">
                             <span class="text-[10px] font-bold uppercase px-2 py-0.5 rounded bg-gray-100 text-gray-600 shrink-0" x-text="randomResult?.suburb"></span>
@@ -207,16 +207,9 @@
                         </div>
                     </div>
                 </div>
-            
-                            <template x-for="dish in randomResult?.dishes">
-                                <span class="text-xs px-2.5 py-1 bg-orange-50 text-orange-700 rounded-lg border border-orange-100" x-text="dish"></span>
-                            </template>
-                        </div>
-                    </div>
-                </div>
             </div>
 
-<div class="grid grid-cols-5 border-t border-gray-100 bg-gray-50 shrink-0 py-3 items-center text-center">
+            <div class="grid grid-cols-5 border-t border-gray-100 bg-gray-50 shrink-0 py-3 items-center text-center">
                 
                 <button @click="reportError(randomResult?.id)" 
                     :disabled="isReporting"

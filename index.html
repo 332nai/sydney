@@ -120,8 +120,10 @@
                                 <span>🏆 Good Food Guide </span>
                             </button>
 
-                            <div class="w-px h-4 bg-gray-200 mx-1"></div>
+<div class="w-px h-4 bg-gray-200 mx-1"></div>
 
+<span class="text-xs font-bold text-gray-400 mx-1 select-none">智能推荐：</span>
+                            
                             <button @click="toggleFilter('activeStars', 3)" :class="activeStars.includes(3) ? 'bg-yellow-500 text-white border-yellow-500' : 'bg-white text-gray-600 border-gray-200 hover:bg-yellow-50'" class="btn-transition px-4 py-1.5 rounded-full text-xs font-medium border">⭐⭐⭐</button>
                             <button @click="toggleFilter('activeStars', 2)" :class="activeStars.includes(2) ? 'bg-yellow-500 text-white border-yellow-500' : 'bg-white text-gray-600 border-gray-200 hover:bg-yellow-50'" class="btn-transition px-4 py-1.5 rounded-full text-xs font-medium border">⭐⭐</button>
                             <button @click="toggleFilter('activeStars', 1)" :class="activeStars.includes(1) ? 'bg-yellow-500 text-white border-yellow-500' : 'bg-white text-gray-600 border-gray-200 hover:bg-yellow-50'" class="btn-transition px-4 py-1.5 rounded-full text-xs font-medium border">⭐</button>
@@ -393,7 +395,7 @@
                 activePrices: [],
                 activeStars: [],
                 
-                onlyGoodFood: false,
+                onlyGoodFood: true,
 
                 currentPage: 1,
                 itemsPerPage: 24,

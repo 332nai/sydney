@@ -117,7 +117,7 @@
                                 <span class="text-[8px] text-gray-400" x-text="expanded.stars ? '▲' : '▼'"></span>
                             </div>
                             
-                            <button @click="resetFilter('stars'); onlyGoodFood = false" :class="(activeStars.length === 0 && !onlyGoodFood) ? 'bg-yellow-500 text-white border-yellow-500' : 'bg-white text-gray-600 border-gray-200 hover:bg-yellow-50'" class="btn-transition px-3 py-1.5 rounded-full text-xs font-medium border">全部</button>
+                            <button @click="resetFilter('stars')" :class="(activeStars.length === 0 && !onlyGoodFood && !onlyTrending && !onlyPick) ? 'bg-yellow-500 text-white border-yellow-500' : 'bg-white text-gray-600 border-gray-200 hover:bg-yellow-50'" class="btn-transition px-3 py-1.5 rounded-full text-xs font-medium border">全部</button>
                             
                             <button @click="onlyGoodFood = !onlyGoodFood; currentPage = 1" 
                                     :class="onlyGoodFood ? 'bg-gray-900 text-amber-300 border-gray-900 ring-2 ring-amber-300/50' : 'bg-white text-gray-600 border-gray-200 hover:bg-gray-50'" 
@@ -125,9 +125,21 @@
                                 <span>🏆 Good Food Guide </span>
                             </button>
 
-<div class="w-px h-4 bg-gray-200 mx-1"></div>
+                            <button @click="onlyTrending = !onlyTrending; currentPage = 1" 
+                                    :class="onlyTrending ? 'bg-red-500 text-white border-red-500 ring-2 ring-red-300/50' : 'bg-white text-gray-600 border-gray-200 hover:bg-gray-50'" 
+                                    class="btn-transition px-3 py-1.5 rounded-full text-xs font-bold border flex items-center gap-1">
+                                <span>🔥 热门 Trending</span>
+                            </button>
 
-<span class="text-xs font-bold text-gray-400 mx-1 select-none">AI推荐：</span>
+                            <button @click="onlyPick = !onlyPick; currentPage = 1" 
+                                    :class="onlyPick ? 'bg-purple-600 text-white border-purple-600 ring-2 ring-purple-400/50' : 'bg-white text-gray-600 border-gray-200 hover:bg-gray-50'" 
+                                    class="btn-transition px-3 py-1.5 rounded-full text-xs font-bold border flex items-center gap-1">
+                                <span>👨‍🍳 Editor's Pick</span>
+                            </button>
+
+                            <div class="w-px h-4 bg-gray-200 mx-1"></div>
+
+                            <span class="text-xs font-bold text-gray-400 mx-1 select-none">AI推荐：</span>
                             
                             <button @click="toggleFilter('activeStars', 3)" :class="activeStars.includes(3) ? 'bg-yellow-500 text-white border-yellow-500' : 'bg-white text-gray-600 border-gray-200 hover:bg-yellow-50'" class="btn-transition px-4 py-1.5 rounded-full text-xs font-medium border">⭐⭐⭐</button>
                             <button @click="toggleFilter('activeStars', 2)" :class="activeStars.includes(2) ? 'bg-yellow-500 text-white border-yellow-500' : 'bg-white text-gray-600 border-gray-200 hover:bg-yellow-50'" class="btn-transition px-4 py-1.5 rounded-full text-xs font-medium border">⭐⭐</button>
@@ -139,9 +151,9 @@
                 <div class="flex justify-between items-center py-2 cursor-pointer select-none border-t border-dashed border-gray-200 mt-2" @click="showFilters = !showFilters">
                     <span class="text-xs font-bold text-gray-400 uppercase tracking-wider flex items-center gap-2">
                         <span>筛选条件</span>
-                        <span x-show="!showFilters && (activeSuburbs.length + activeCategories.length + activePrices.length + activeStars.length + (onlyGoodFood?1:0)) > 0" 
+                        <span x-show="!showFilters && (activeSuburbs.length + activeCategories.length + activePrices.length + activeStars.length + (onlyGoodFood?1:0) + (onlyTrending?1:0) + (onlyPick?1:0)) > 0" 
                               class="bg-orange-100 text-orange-600 px-1.5 rounded-full text-[10px]" x-cloak>
-                             已选 <span x-text="activeSuburbs.length + activeCategories.length + activePrices.length + activeStars.length + (onlyGoodFood?1:0)"></span>
+                             已选 <span x-text="activeSuburbs.length + activeCategories.length + activePrices.length + activeStars.length + (onlyGoodFood?1:0) + (onlyTrending?1:0) + (onlyPick?1:0)"></span>
                         </span>
                     </span>
                     <button class="text-xs font-bold text-gray-500 hover:text-gray-900 flex items-center gap-1 transition-colors">
@@ -195,6 +207,14 @@
 
                             <div x-show="randomResult?.goodFoodValue" class="flex items-center gap-1 bg-gray-900 px-2 py-0.5 rounded shadow-sm border border-gray-700 shrink-0">
                                 <span class="text-[10px] font-bold text-gold" x-text="'🏆 ' + randomResult?.goodFoodValue"></span>
+                            </div>
+
+                            <div x-show="randomResult?.isTrend" class="flex items-center gap-1 bg-red-100 px-2 py-0.5 rounded shadow-sm border border-red-200 shrink-0">
+                                <span class="text-[10px] font-bold text-red-600">🔥 Trending</span>
+                            </div>
+                            
+                            <div x-show="randomResult?.isPick" class="flex items-center gap-1 bg-purple-100 px-2 py-0.5 rounded shadow-sm border border-purple-200 shrink-0">
+                                <span class="text-[10px] font-bold text-purple-600">👨‍🍳 Pick</span>
                             </div>
                         </div>
 
@@ -285,8 +305,18 @@
                          </template>
                          <div class="absolute bottom-0 left-0 right-0 h-10 bg-gradient-to-t from-black/5 to-transparent"></div>
                          
-                         <div x-show="r.goodFoodValue" class="absolute top-2 right-2 z-20 bg-gray-900/90 backdrop-blur border border-white/20 px-2 py-1 rounded shadow-lg flex items-center gap-1">
-                            <span class="text-[10px] font-bold text-gold tracking-wide" x-text="'🏆 ' + r.goodFoodValue"></span>
+                         <div class="absolute top-2 right-2 z-20 flex flex-col gap-1 items-end">
+                             <div x-show="r.goodFoodValue" class="bg-gray-900/90 backdrop-blur border border-white/20 px-2 py-1 rounded shadow-lg flex items-center gap-1">
+                                <span class="text-[10px] font-bold text-gold tracking-wide" x-text="'🏆 ' + r.goodFoodValue"></span>
+                             </div>
+                             
+                             <div x-show="r.isTrend" class="bg-red-500/90 backdrop-blur border border-white/20 px-2 py-1 rounded shadow-lg flex items-center gap-1">
+                                <span class="text-[10px] font-bold text-white tracking-wide">🔥 Trending</span>
+                             </div>
+
+                             <div x-show="r.isPick" class="bg-purple-600/90 backdrop-blur border border-white/20 px-2 py-1 rounded shadow-lg flex items-center gap-1">
+                                <span class="text-[10px] font-bold text-white tracking-wide">👨‍🍳 Pick</span>
+                             </div>
                          </div>
                     </div>
 
@@ -418,6 +448,8 @@
                 activeStars: [],
                 
                 onlyGoodFood: true,
+                onlyTrending: false, // 新增：本月流行开关
+                onlyPick: false,     // 新增：编辑精选开关
 
                 currentPage: 1,
                 itemsPerPage: 24,
@@ -472,8 +504,11 @@
                                 desc: row.desc || '暂无描述',
                                 dishes: row.dishes ? row.dishes.split(/,|，/).map(d => d.trim()) : [],
                                 
-                                // 修改点：直接读取 goodfood 列的原始内容
                                 goodFoodValue: row.goodfood ? String(row.goodfood).trim() : '',
+                                
+                                // 新增：映射表格里的 trend 和 pick 列
+                                isTrend: row.trend == 1, 
+                                isPick: row.pick == 1,
 
                                 image: row.image && row.image.startsWith('http') ? row.image.trim() : (this.defaultImages[cleanCat] || this.defaultImages['Other'])
                             };
@@ -499,7 +534,6 @@
                     }
                 },
 
-                // 新增：通用的 Toast 触发函数
                 triggerToast(msg) {
                     this.toastMessage = msg;
                     this.showToast = true;
@@ -530,15 +564,15 @@
                 shareRestaurant(r) {
                     if (!r) return;
                     let text = `发现一家好吃的！\n🏠 ${r.name}`;
-                    // 修改点：如果 goodFoodValue 存在，则显示对应内容
                     if(r.goodFoodValue) text += `\n🏆 Good Food Guide ${r.goodFoodValue}`;
+                    if(r.isTrend) text += `\n🔥 Trending This Month`;
+                    if(r.isPick) text += `\n👨‍🍳 Editor's Pick`;
                     text += `\n📍 ${r.suburb}\n⭐ 推荐指数: ${r.recommendationLevel}星\n💬 ${r.desc}`;
                     
                     const url = `https://www.google.com/maps/search/?api=1&query=` + encodeURIComponent(r.name + ' ' + r.suburb + ' Sydney');
                     const fullText = `${text}\n🔗 导航: ${url}`;
                     
                     navigator.clipboard.writeText(fullText).then(() => {
-                        // 修改点：使用 Toast 替代 alert
                         this.triggerToast('已复制"${text}"餐厅信息');
                     }).catch(err => {
                         alert('复制失败，请手动截图分享');
@@ -554,7 +588,6 @@
                         }).catch(console.error);
                     } else {
                         navigator.clipboard.writeText(window.location.href);
-                        // 修改点：使用 Toast 替代 alert
                         this.triggerToast('链接已复制，快发给朋友吧！');
                     }
                 },
@@ -633,11 +666,17 @@
                     this.currentPage = 1; 
                     window.scrollTo({top: 0, behavior: 'smooth'});
                 },
+                
                 resetFilter(type) {
                     if (type === 'suburbs') this.activeSuburbs = [];
                     if (type === 'categories') this.activeCategories = [];
                     if (type === 'prices') this.activePrices = [];
-                    if (type === 'stars') this.activeStars = [];
+                    if (type === 'stars') {
+                        this.activeStars = [];
+                        this.onlyGoodFood = false;
+                        this.onlyTrending = false; // 重置
+                        this.onlyPick = false;     // 重置
+                    }
                     this.isShuffleMode = false; 
                     this.currentPage = 1; 
                     window.scrollTo({top: 0, behavior: 'smooth'});
@@ -669,8 +708,10 @@
                         const matchesPrice = this.activePrices.length === 0 || this.activePrices.includes(r.priceLevel);
                         const matchesStars = this.activeStars.length === 0 || this.activeStars.includes(r.recommendationLevel);
                         
-                        // 修改点：筛选条件变更为“只要有内容”即视为 Good Food
+                        // Good Food / Trending / Pick 逻辑
                         const matchesGoodFood = !this.onlyGoodFood || (r.goodFoodValue && r.goodFoodValue.length > 0);
+                        const matchesTrend = !this.onlyTrending || r.isTrend;
+                        const matchesPick = !this.onlyPick || r.isPick;
                         
                         const query = this.search.toLowerCase();
                         const matchesSearch = r.name.toLowerCase().includes(query) || 
@@ -678,7 +719,8 @@
                                               r.displayCategory.toLowerCase().includes(query) || 
                                               r.desc.toLowerCase().includes(query) ||
                                               r.dishes.some(d => d.toLowerCase().includes(query));
-                        return matchesSuburb && matchesCategory && matchesPrice && matchesStars && matchesGoodFood && matchesSearch;
+                        
+                        return matchesSuburb && matchesCategory && matchesPrice && matchesStars && matchesGoodFood && matchesTrend && matchesPick && matchesSearch;
                     });
                 },
 

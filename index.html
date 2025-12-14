@@ -299,17 +299,21 @@
                                 </template>
                             </div>
                             
-                            <div class="flex items-center gap-2 shrink-0">
-                                <button @click.stop="copyKeyword(r.name)" 
-                                        class="text-[10px] text-gray-400 hover:text-red-500 flex items-center gap-0.5 transition-colors border border-transparent hover:border-red-100 rounded px-1.5 py-1 hover:bg-red-50 cursor-pointer">
-                                    <span>📕</span> 
-                                </button>
+<div class="flex items-center gap-2 shrink-0">
+    
+    <button @click.stop="copyKeyword(r.name)" 
+            class="text-[10px] text-gray-400 bg-gray-100 hover:bg-red-50 hover:text-red-600 border border-gray-200 hover:border-red-200 px-2 py-1 rounded transition-all whitespace-nowrap"
+            title="已复制，请打卡小红书搜索">
+        📕
+    </button>
 
-                                <button @click.stop="reportError(r.id)" 
-                                        class="text-[10px] text-gray-400 bg-gray-100 hover:bg-red-50 hover:text-red-600 border border-gray-200 hover:border-red-200 px-2 py-1 rounded transition-all whitespace-nowrap">
-                                    ⚠️
-                                </button>
-                            </div>
+    <button @click.stop="reportError(r.id)" 
+            class="text-[10px] text-gray-400 bg-gray-100 hover:bg-red-50 hover:text-red-600 border border-gray-200 hover:border-red-200 px-2 py-1 rounded transition-all whitespace-nowrap">
+        ⚠️
+    </button>
+</div>
+
+                            
                         </div>
                     </div>
                 </div>
@@ -490,7 +494,7 @@
                     
                     if (navigator.clipboard && navigator.clipboard.writeText) {
                         navigator.clipboard.writeText(text).then(() => {
-                            this.triggerToast(`已复制"${text}"店名，请打开小红书粘贴搜索`);
+                            this.triggerToast(`已复制"${text}"，请打开小红书粘贴搜索`);
                         }).catch(err => {
                             prompt("请手动复制搜索词：", text);
                         });
